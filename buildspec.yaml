@@ -16,3 +16,7 @@ phases:
     commands:
       - echo Pushing the Docker image...
       - docker push $AWS_ACCOUNT_ID.dkr.ecr.$AWS_DEFAULT_REGION.amazonaws.com/$IMAGE_REPO_NAME:test-$COMMIT_ID
+      - echo "Update Kube Config"      
+      - aws eks update-kubeconfig --name test-deployment-eks
+      - echo "Apply changes to kube manifests"
+      - kubectl -n web set image deployment/test-frontend test-frontend=$AWS_ACCOUNT_ID.dkr.ecr.$AWS_DEFAULT_REGION.amazonaws.com/$IMAGE_REPO_NAME:test-$COMMIT_ID
